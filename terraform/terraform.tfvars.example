@@ -1,0 +1,45 @@
+# Copy this file to terraform.tfvars and customize.
+
+aws_region   = "eu-west-2"
+project_name = "ec2-ecs-migration"
+environment  = "dev"
+owner        = "platform"
+
+# Networking
+vpc_cidr = "10.0.0.0/16"
+
+availability_zones = [
+  "eu-west-2a",
+  "eu-west-2b"
+]
+
+public_subnet_cidrs = [
+  "10.0.1.0/24",
+  "10.0.2.0/24"
+]
+
+private_subnet_cidrs = [
+  "10.0.11.0/24",
+  "10.0.12.0/24"
+]
+
+# Application
+container_port = 5000
+image_tag      = "latest"
+
+# ECS
+desired_count = 2
+ecs_cpu       = 256
+ecs_memory    = 512
+
+# Autoscaling
+min_capacity  = 2
+max_capacity  = 4
+cpu_target    = 70
+memory_target = 75
+
+# Additional tags
+tags = {
+  CostCenter = "engineering"
+  Application = "legacy-api"
+}
