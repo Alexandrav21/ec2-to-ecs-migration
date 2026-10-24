@@ -29,3 +29,8 @@ terraform/app.zip
 # Logs
 *.log
 logs/
+
+# Security scan artifacts
+sbom.json
+grype.json
+.tools/
