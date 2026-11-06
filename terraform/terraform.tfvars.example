@@ -25,7 +25,7 @@ private_subnet_cidrs = [
 
 # Application
 container_port = 5000
-image_tag      = "latest"
+image_tag      = "<git commit SHA>"
 
 # ECS
 desired_count = 2

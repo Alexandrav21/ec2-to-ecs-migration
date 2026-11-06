@@ -76,9 +76,8 @@ variable "container_port" {
 }
 
 variable "image_tag" {
-  description = "Container image tag to deploy"
+  description = "Docker image tag to deploy"
   type        = string
-  default     = "latest"
 }
 
 variable "desired_count" {
@@ -131,5 +130,5 @@ variable "memory_target" {
 variable "github_oidc_subject" {
   description = "GitHub OIDC subject allowed to assume the GitHub Actions role"
   type        = string
-  default     = "repo:Alexandrav21@122618599/ec2-ecs-migration@1400204135:ref:refs/heads/main"
+  default     = "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:ref:refs/heads/main"
 }

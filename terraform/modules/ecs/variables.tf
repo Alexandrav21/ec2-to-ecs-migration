@@ -59,9 +59,8 @@ variable "ecr_repository_url" {
 }
 
 variable "image_tag" {
-  description = "Container image tag to deploy"
+  description = "Docker image tag to deploy"
   type        = string
-  default     = "latest"
 }
 
 variable "container_port" {

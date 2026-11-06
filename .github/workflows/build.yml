@@ -77,3 +77,29 @@ jobs:
 
           docker push \
             ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
+
+      - name: Download current task definition
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition ec2-to-ecs-migration-dev \
+            --query taskDefinition \
+            > task-definition.json
+
+      - name: Update task definition image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@8d79160660ad39c402a16e5fc7cd2a32e8f7d6b7 # v1.9.1
+        with:
+          task-definition: task-definition.json
+          container-name: legacy-api
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Deploy to Amazon ECS
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: aws-actions/amazon-ecs-deploy-task-definition@a00d4d57ac0de1a99b39fe469f3d898d38717c2b # v2.6.4
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ vars.ECS_SERVICE }}
+          cluster: ${{ vars.ECS_CLUSTER }}
+          wait-for-service-stability: true

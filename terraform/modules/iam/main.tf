@@ -116,3 +116,40 @@ resource "aws_iam_role_policy" "github_actions_ecr" {
     ]
   })
 }
+
+# Allow GitHub Actions to deploy new task definition revisions to ECS.
+resource "aws_iam_role_policy" "github_actions_ecs_deploy" {
+  name = "${var.project_name}-${var.environment}-github-actions-ecs-deploy"
+  role = aws_iam_role.github_actions.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+
+        Action = [
+          "ecs:DescribeTaskDefinition",
+          "ecs:RegisterTaskDefinition",
+          "ecs:DescribeServices",
+          "ecs:UpdateService"
+        ]
+
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+
+        Action = [
+          "iam:PassRole"
+        ]
+
+        Resource = [
+          aws_iam_role.ecs_execution.arn,
+          aws_iam_role.ecs_task.arn
+        ]
+      }
+    ]
+  })
+}

@@ -120,6 +120,12 @@ resource "aws_ecs_service" "app" {
     aws_ecs_task_definition.app
   ]
 
+  lifecycle {
+    ignore_changes = [
+      task_definition
+    ]
+  }
+
   tags = {
     Name = "${var.project_name}-${var.environment}-ecs-service"
   }
