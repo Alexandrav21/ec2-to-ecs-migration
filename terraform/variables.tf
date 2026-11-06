@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "project_name" {
   description = "Project name for resource naming"
   type        = string
-  default     = "ec2-ecs-migration"
+  default     = "ec2-to-ecs-migration"
 }
 
 variable "environment" {

@@ -1,7 +1,7 @@
 # Copy this file to terraform.tfvars and customize.
 
 aws_region   = "eu-west-2"
-project_name = "ec2-ecs-migration"
+project_name = "ec2-to-ecs-migration"
 environment  = "dev"
 owner        = "platform"
 
