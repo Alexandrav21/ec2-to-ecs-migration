@@ -43,3 +43,5 @@ tags = {
   CostCenter = "engineering"
   Application = "legacy-api"
 }
+
+github_oidc_subject = "repo:Alexandrav21@122618599/ec2-ecs-migration@1400204135:ref:refs/heads/main"

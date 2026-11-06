@@ -127,3 +127,9 @@ variable "memory_target" {
   type        = number
   default     = 75
 }
+
+variable "github_oidc_subject" {
+  description = "GitHub OIDC subject allowed to assume the GitHub Actions role"
+  type        = string
+  default     = "repo:Alexandrav21@122618599/ec2-ecs-migration@1400204135:ref:refs/heads/main"
+}

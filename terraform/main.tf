@@ -35,6 +35,7 @@ module "iam" {
   aws_region          = var.aws_region
   aws_account_id      = data.aws_caller_identity.current.account_id
   ecr_repository_name = module.ecr.repository_name
+  github_oidc_subject = var.github_oidc_subject
 }
 
 module "cloudwatch" {
