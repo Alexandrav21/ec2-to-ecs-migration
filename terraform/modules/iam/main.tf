@@ -259,13 +259,18 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "ec2:DeleteTags",
           "ec2:DeleteVpc",
           "ec2:DescribeAddresses",
+          "ec2:DescribeAddressesAttribute",
           "ec2:DescribeAvailabilityZones",
           "ec2:DescribeInternetGateways",
           "ec2:DescribeNatGateways",
+          "ec2:DescribeNetworkAcls",
+          "ec2:DescribeNetworkInterfaces",
           "ec2:DescribeRouteTables",
+          "ec2:DescribeSecurityGroupRules",
           "ec2:DescribeSecurityGroups",
           "ec2:DescribeSubnets",
           "ec2:DescribeTags",
+          "ec2:DescribeVpcAttribute",
           "ec2:DescribeVpcs",
           "ec2:DisassociateAddress",
           "ec2:DisassociateRouteTable",
@@ -335,8 +340,12 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "elasticloadbalancing:DeleteListener",
           "elasticloadbalancing:DeleteLoadBalancer",
           "elasticloadbalancing:DeleteTargetGroup",
+          "elasticloadbalancing:DescribeListenerAttributes",
           "elasticloadbalancing:DescribeListeners",
+          "elasticloadbalancing:DescribeLoadBalancerAttributes",
           "elasticloadbalancing:DescribeLoadBalancers",
+          "elasticloadbalancing:DescribeTags",
+          "elasticloadbalancing:DescribeTargetGroupAttributes",
           "elasticloadbalancing:DescribeTargetGroups",
           "elasticloadbalancing:DescribeTargetHealth",
           "elasticloadbalancing:ModifyListener",
@@ -382,6 +391,7 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "application-autoscaling:DeleteScalingPolicy",
           "application-autoscaling:DescribeScalableTargets",
           "application-autoscaling:DescribeScalingPolicies",
+          "application-autoscaling:ListTagsForResource",
           "application-autoscaling:PutScalingPolicy",
           "application-autoscaling:RegisterScalableTarget"
         ]
@@ -401,6 +411,7 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "iam:GetRole",
           "iam:GetRolePolicy",
           "iam:ListAttachedRolePolicies",
+          "iam:ListInstanceProfilesForRole",
           "iam:ListRolePolicies",
           "iam:PassRole",
           "iam:PutRolePolicy",
@@ -410,6 +421,17 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
         ]
 
         Resource = "arn:aws:iam::${var.aws_account_id}:role/${var.project_name}-${var.environment}-*"
+      },
+      {
+        Sid    = "ReadGitHubOidcProvider"
+        Effect = "Allow"
+
+        Action = [
+          "iam:GetOpenIDConnectProvider",
+          "iam:ListOpenIDConnectProviders"
+        ]
+
+        Resource = "*"
       },
       {
         Sid    = "Acm"
