@@ -39,7 +39,10 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = [var.github_oidc_subject]
+      values = [
+        var.github_oidc_subject,
+        var.github_oidc_production_subject
+      ]
     }
   }
 }
@@ -109,6 +112,16 @@ resource "aws_iam_role_policy" "github_actions_ecr" {
           "ecr:InitiateLayerUpload",
           "ecr:PutImage",
           "ecr:UploadLayerPart"
+        ]
+
+        Resource = "arn:aws:ecr:${var.aws_region}:${var.aws_account_id}:repository/${var.ecr_repository_name}"
+      },
+      {
+        Sid    = "DescribeProjectImages"
+        Effect = "Allow"
+
+        Action = [
+          "ecr:DescribeImages"
         ]
 
         Resource = "arn:aws:ecr:${var.aws_region}:${var.aws_account_id}:repository/${var.ecr_repository_name}"

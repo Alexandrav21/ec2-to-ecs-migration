@@ -27,3 +27,8 @@ variable "github_oidc_subject" {
   description = "GitHub OIDC subject allowed to assume the GitHub Actions role"
   type        = string
 }
+
+variable "github_oidc_production_subject" {
+  description = "GitHub OIDC subject for jobs using the production environment, such as the rollback workflow"
+  type        = string
+}

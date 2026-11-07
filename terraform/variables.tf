@@ -144,3 +144,9 @@ variable "github_oidc_subject" {
   type        = string
   default     = "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:ref:refs/heads/main"
 }
+
+variable "github_oidc_production_subject" {
+  description = "GitHub OIDC subject for jobs using the production environment, such as the rollback workflow"
+  type        = string
+  default     = "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:environment:production"
+}

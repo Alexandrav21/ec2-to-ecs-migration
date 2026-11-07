@@ -1,0 +1,81 @@
+name: Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_sha:
+        description: Full 40-character Git SHA of a known-good image already in ECR
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  rollback:
+    name: Roll back ECS service
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
+
+    # Shared with Build and Terraform apply so a rollback never overlaps another deploy.
+    concurrency:
+      group: deploy-${{ github.ref }}
+
+    env:
+      IMAGE_SHA: ${{ inputs.image_sha }}
+      ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+      ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}
+      ECS_SERVICE: ${{ vars.ECS_SERVICE }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          role-session-name: github-actions-rollback-${{ github.run_id }}
+
+      - name: Run rollback checks
+        id: checks
+        run: ./scripts/rollback-checks.sh
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
+
+      - name: Update task definition image
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@8d79160660ad39c402a16e5fc7cd2a32e8f7d6b7 # v1.9.1
+        with:
+          task-definition: task-definition.json
+          container-name: legacy-api
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ inputs.image_sha }}
+
+      - name: Deploy to Amazon ECS
+        id: deploy
+        uses: aws-actions/amazon-ecs-deploy-task-definition@a00d4d57ac0de1a99b39fe469f3d898d38717c2b # v2.6.4
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ vars.ECS_SERVICE }}
+          cluster: ${{ vars.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+      - name: Report rollback
+        env:
+          IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ inputs.image_sha }}
+          DIGEST: ${{ steps.checks.outputs.digest }}
+          NEW_TASK_DEFINITION: ${{ steps.deploy.outputs.task-definition-arn }}
+          PREVIOUS_IMAGE: ${{ steps.checks.outputs.previous-image }}
+        run: |
+          {
+            echo "## ECS rollback complete"
+            echo "- Deployed: \`$IMAGE\` (\`$DIGEST\`)"
+            echo "- Task definition: \`$NEW_TASK_DEFINITION\`"
+            echo "- Replaced: \`$PREVIOUS_IMAGE\`"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
