@@ -44,6 +44,37 @@ data "aws_iam_policy_document" "github_actions_assume_role" {
   }
 }
 
+data "aws_iam_policy_document" "github_actions_terraform_assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Federated"
+      identifiers = [data.aws_iam_openid_connect_provider.github.arn]
+    }
+
+    actions = [
+      "sts:AssumeRoleWithWebIdentity"
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:sub"
+      values = [
+        "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:ref:refs/heads/main",
+        "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:environment:production",
+        "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:environment:production-destroy"
+      ]
+    }
+  }
+}
+
 resource "aws_iam_role" "ecs_execution" {
   name = "${var.project_name}-${var.environment}-ecs-execution"
 
@@ -158,7 +189,7 @@ resource "aws_iam_role_policy" "github_actions_ecs_deploy" {
 resource "aws_iam_role" "github_actions_terraform" {
   name = "${var.project_name}-${var.environment}-github-actions-terraform"
 
-  assume_role_policy = data.aws_iam_policy_document.github_actions_assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.github_actions_terraform_assume_role.json
 
   max_session_duration = 3600
 
