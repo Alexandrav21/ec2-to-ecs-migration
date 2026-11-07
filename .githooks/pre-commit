@@ -1,0 +1,9 @@
+#!/bin/sh
+
+echo "Checking Terraform..."
+
+terraform -chdir=terraform fmt -check -recursive || exit 1
+terraform -chdir=terraform validate || exit 1
+terraform -chdir=terraform/bootstrap validate || exit 1
+
+echo "Terraform checks passed."

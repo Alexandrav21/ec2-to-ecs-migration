@@ -9,7 +9,10 @@ env/
 ENV/
 
 # IDE
-.vscode/
+# Ignore VS Code workspace files except shared project settings
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
