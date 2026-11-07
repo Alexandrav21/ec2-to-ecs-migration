@@ -32,3 +32,8 @@ output "alb_arn_suffix" {
   description = "ARN suffix of the application load balancer"
   value       = aws_lb.app.arn_suffix
 }
+
+output "target_group_arn_suffix" {
+  description = "ARN suffix of the application target group"
+  value       = aws_lb_target_group.app.arn_suffix
+}

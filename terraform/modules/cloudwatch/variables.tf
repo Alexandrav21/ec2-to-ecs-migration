@@ -34,3 +34,20 @@ variable "alb_5xx_alarm_threshold" {
   type        = number
   default     = 5
 }
+
+variable "target_group_arn_suffix" {
+  description = "Target group ARN suffix used by the application 5xx and latency alarms"
+  type        = string
+}
+
+variable "target_5xx_alarm_threshold" {
+  description = "Number of application (target) 5xx responses in one evaluation period that triggers the alarm"
+  type        = number
+  default     = 5
+}
+
+variable "target_p95_latency_alarm_threshold" {
+  description = "p95 target response time in seconds that triggers the latency alarm"
+  type        = number
+  default     = 1
+}

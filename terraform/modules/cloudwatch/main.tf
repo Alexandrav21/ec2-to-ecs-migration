@@ -49,3 +49,47 @@ resource "aws_cloudwatch_metric_alarm" "alb_high_5xx" {
     Name = "${var.project_name}-${var.environment}-alb-high-5xx"
   }
 }
+
+resource "aws_cloudwatch_metric_alarm" "target_high_5xx" {
+  alarm_name          = "${var.project_name}-${var.environment}-target-high-5xx"
+  alarm_description   = "The application is returning an elevated number of 5xx responses."
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "HTTPCode_Target_5XX_Count"
+  namespace           = "AWS/ApplicationELB"
+  period              = 300
+  statistic           = "Sum"
+  threshold           = var.target_5xx_alarm_threshold
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    LoadBalancer = var.alb_arn_suffix
+    TargetGroup  = var.target_group_arn_suffix
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-target-high-5xx"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "target_high_latency" {
+  alarm_name          = "${var.project_name}-${var.environment}-target-high-latency"
+  alarm_description   = "p95 application response time is above the configured threshold."
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "TargetResponseTime"
+  namespace           = "AWS/ApplicationELB"
+  period              = 300
+  extended_statistic  = "p95"
+  threshold           = var.target_p95_latency_alarm_threshold
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    LoadBalancer = var.alb_arn_suffix
+    TargetGroup  = var.target_group_arn_suffix
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-target-high-latency"
+  }
+}

@@ -73,6 +73,10 @@ module "cloudwatch" {
   alb_arn_suffix          = module.alb.alb_arn_suffix
   ecs_cpu_alarm_threshold = 80
   alb_5xx_alarm_threshold = 5
+
+  target_group_arn_suffix            = module.alb.target_group_arn_suffix
+  target_5xx_alarm_threshold         = 5
+  target_p95_latency_alarm_threshold = 1
 }
 
 module "ecs" {
