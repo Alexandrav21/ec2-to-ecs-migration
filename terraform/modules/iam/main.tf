@@ -68,8 +68,9 @@ data "aws_iam_policy_document" "github_actions_terraform_assume_role" {
       variable = "token.actions.githubusercontent.com:sub"
       values = [
         "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:ref:refs/heads/main",
+        "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:pull_request",
         "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:environment:production",
-        "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:environment:production-destroy"
+        "repo:Alexandrav21@122618599/ec2-to-ecs-migration@1400204135:environment:destroy"
       ]
     }
   }
