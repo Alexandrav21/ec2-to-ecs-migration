@@ -28,6 +28,18 @@ variable "tags" {
   default     = {}
 }
 
+variable "hosted_zone_name" {
+  description = "Existing public Route 53 hosted zone used for the application domain"
+  type        = string
+  default     = "labs.alexandravladu.co.uk"
+}
+
+variable "domain_name" {
+  description = "Domain name used to access the application over HTTPS"
+  type        = string
+  default     = "ec2-to-ecs.labs.alexandravladu.co.uk"
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string

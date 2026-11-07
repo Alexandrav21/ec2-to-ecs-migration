@@ -293,6 +293,7 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "acm:DeleteCertificate",
           "acm:DescribeCertificate",
           "acm:ListCertificates",
+          "acm:ListTagsForCertificate",
           "acm:RemoveTagsFromCertificate",
           "acm:RequestCertificate"
         ]
@@ -308,7 +309,9 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "route53:GetChange",
           "route53:GetHostedZone",
           "route53:ListHostedZones",
-          "route53:ListResourceRecordSets"
+          "route53:ListHostedZonesByName",
+          "route53:ListResourceRecordSets",
+          "route53:ListTagsForResource"
         ]
 
         Resource = "*"

@@ -1,4 +1,10 @@
 data "aws_caller_identity" "current" {}
+
+data "aws_route53_zone" "main" {
+  name         = var.hosted_zone_name
+  private_zone = false
+}
+
 module "networking" {
   source = "./modules/networking"
 
@@ -17,6 +23,15 @@ module "ecr" {
   environment  = var.environment
 }
 
+module "acm" {
+  source = "./modules/acm"
+
+  project_name   = var.project_name
+  environment    = var.environment
+  domain_name    = var.domain_name
+  hosted_zone_id = data.aws_route53_zone.main.zone_id
+}
+
 module "alb" {
   source = "./modules/alb"
 
@@ -25,6 +40,16 @@ module "alb" {
   vpc_id            = module.networking.vpc_id
   public_subnet_ids = module.networking.public_subnet_ids
   container_port    = var.container_port
+  certificate_arn   = module.acm.certificate_arn
+}
+
+module "route53" {
+  source = "./modules/route53"
+
+  domain_name    = var.domain_name
+  hosted_zone_id = data.aws_route53_zone.main.zone_id
+  alb_dns_name   = module.alb.alb_dns_name
+  alb_zone_id    = module.alb.alb_zone_id
 }
 
 module "iam" {

@@ -45,3 +45,7 @@ tags = {
 }
 
 github_oidc_subject = "repo:Alexandrav21@122618599/ec2-ecs-migration@1400204135:ref:refs/heads/main"
+
+# DNS / HTTPS
+hosted_zone_name = "labs.alexandravladu.co.uk"
+domain_name      = "ec2-to-ecs.labs.alexandravladu.co.uk"

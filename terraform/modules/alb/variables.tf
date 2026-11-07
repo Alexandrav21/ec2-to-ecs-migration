@@ -28,3 +28,8 @@ variable "container_port" {
   type        = number
   default     = 5000
 }
+
+variable "certificate_arn" {
+  description = "ARN of the validated ACM certificate for the HTTPS listener"
+  type        = string
+}

@@ -13,6 +13,11 @@ output "alb_dns_name" {
   value       = aws_lb.app.dns_name
 }
 
+output "alb_zone_id" {
+  description = "Route 53 zone ID of the Application Load Balancer"
+  value       = aws_lb.app.zone_id
+}
+
 output "target_group_arn" {
   description = "Application target group ARN"
   value       = aws_lb_target_group.app.arn

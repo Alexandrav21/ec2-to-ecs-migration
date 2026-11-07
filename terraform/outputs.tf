@@ -43,6 +43,11 @@ output "alb_dns_name" {
   value       = module.alb.alb_dns_name
 }
 
+output "app_url" {
+  description = "HTTPS URL of the application"
+  value       = "https://${module.route53.fqdn}"
+}
+
 output "target_group_arn" {
   description = "ALB target group ARN"
   value       = module.alb.target_group_arn
