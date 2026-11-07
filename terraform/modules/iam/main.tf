@@ -217,7 +217,7 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "s3:ListBucket"
         ]
 
-        Resource = "arn:aws:s3:::ec2-ecs-migration-tf-state-445567089145"
+        Resource = "arn:aws:s3:::ec2-to-ecs-migration-tf-state-445567089145"
       },
       {
         Sid    = "TerraformStateObjects"
@@ -230,7 +230,7 @@ resource "aws_iam_role_policy" "github_actions_terraform" {
           "s3:PutObject"
         ]
 
-        Resource = "arn:aws:s3:::ec2-ecs-migration-tf-state-445567089145/dev/terraform.tfstate*"
+        Resource = "arn:aws:s3:::ec2-to-ecs-migration-tf-state-445567089145/dev/terraform.tfstate*"
       },
       {
         Sid    = "Ec2Networking"
