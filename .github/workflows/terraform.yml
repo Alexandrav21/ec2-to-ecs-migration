@@ -88,6 +88,10 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
 
+    # Shared with the Build job so an ECS deploy never runs during an apply.
+    concurrency:
+      group: deploy-${{ github.ref }}
+
     environment:
       name: production
 

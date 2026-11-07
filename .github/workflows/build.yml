@@ -21,6 +21,10 @@ jobs:
     name: Build and scan
     runs-on: ubuntu-latest
 
+    # Shared with the Terraform apply job so an ECS deploy never runs during an apply.
+    concurrency:
+      group: deploy-${{ github.ref }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
