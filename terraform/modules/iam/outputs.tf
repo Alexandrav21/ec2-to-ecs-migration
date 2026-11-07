@@ -12,8 +12,3 @@ output "github_actions_role_arn" {
   description = "ARN of the GitHub Actions application deployment role"
   value       = aws_iam_role.github_actions.arn
 }
-
-output "github_actions_terraform_role_arn" {
-  description = "ARN of the GitHub Actions Terraform role"
-  value       = aws_iam_role.github_actions_terraform.arn
-}
