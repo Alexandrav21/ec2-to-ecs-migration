@@ -23,14 +23,14 @@ resource "aws_lb_target_group" "app" {
     enabled             = true
     healthy_threshold   = 2
     unhealthy_threshold = 3
-    interval            = 30
+    interval            = 10
     timeout             = 5
     protocol            = "HTTP"
     path                = "/health"
     matcher             = "200"
   }
 
-  deregistration_delay = 30
+  deregistration_delay = 10
 
   tags = {
     Name = "${var.project_name}-${var.environment}-tg"
