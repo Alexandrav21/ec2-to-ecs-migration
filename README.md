@@ -126,13 +126,13 @@ The NAT gateways were also an important FinOps lesson. They are a meaningful rec
 
 ### ECS
 
-The ECS service is configured for two Fargate tasks, with autoscaling able to adjust capacity, and registers them with the ALB target group.
+The ECS service is configured for two Fargate tasks, with autoscaling able to adjust capacity between two and four tasks, and registers them with the ALB target group.
 
 The service uses:
 
 - health checks
 - deployment circuit breaker with rollback
-- autoscaling policies
+- autoscaling policies (target tracking on average CPU at 70% and memory at 75%, with 60-second cooldowns)
 - ECS managed tags
 - CloudWatch logging
 
