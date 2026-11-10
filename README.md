@@ -398,6 +398,8 @@ Deploy
 
 That is why I added a destroy workflow rather than leaving cleanup as a list of manual AWS commands.
 
+Every resource also gets consistent tags through the AWS provider's `default_tags` block: `Project`, `Environment`, `ManagedBy = "Terraform"` and `Owner`, plus any extra values passed in `var.tags`. This makes it easier to filter costs and find what belongs to this project in the AWS console.
+
 I also kept CloudFront, WAF, Redis, multi-region infrastructure, Vault, CodeDeploy blue/green and New Relic out of scope. They can be useful elsewhere, but I did not need them to demonstrate this migration.
 
 I wanted to be able to explain why each part is there, rather than keep adding services just because I could.
