@@ -4,10 +4,20 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "app/**"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/build.yml"
 
   pull_request:
     branches:
       - main
+    paths:
+      - "app/**"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/build.yml"
 
   workflow_dispatch:
 

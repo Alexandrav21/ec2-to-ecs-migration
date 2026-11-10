@@ -182,7 +182,7 @@ There are four separate workflows, not one pipeline:
 
 | Workflow | Trigger | Behaviour |
 |---|---|---|
-| [Build](.github/workflows/build.yml) | PR to `main`, push to `main`, or manual dispatch | Builds and scans. Only a push to `main` also publishes the SHA image and deploys ECS. |
+| [Build](.github/workflows/build.yml) | Relevant PR/push changes to `main`, or manual dispatch | Builds and scans. Only a matching push to `main` also publishes the SHA image and deploys ECS. |
 | [Terraform](.github/workflows/terraform.yml) | Relevant PR/push changes, or manual dispatch | Formats/validates and plans. Only manual dispatch proceeds to apply in `production`. |
 | [Rollback](.github/workflows/rollback.yml) | Manual dispatch with an existing image SHA | Validates the target and deploys that image through a new ECS task-definition revision in `production`. |
 | [Terraform Destroy](.github/workflows/terraform-destroy.yml) | Manual dispatch with exact `DESTROY` confirmation | Tears down the application state in `destroy`; bootstrap resources are outside that state. |
@@ -205,9 +205,11 @@ The `production` environment is used by Terraform apply and application rollback
 
 The Build workflow handles application delivery.
 
+Automatic runs only trigger for changes to `app/**`, `Dockerfile`, `.dockerignore` or the Build workflow itself. README, screenshot and Terraform-only commits do not rebuild or deploy the application. Manual runs remain available for build and scan checks.
+
 ```mermaid
 flowchart TB
-    Trigger[PR, push to main, or manual] --> Build[Docker build]
+    Trigger[Relevant PR or push, or manual] --> Build[Docker build]
     Build --> Scan[SBOM and vulnerability scan]
     Scan --> Gate{Push to main?}
     Gate -->|No| Stop[Checks only]
@@ -266,6 +268,10 @@ flowchart TB
 ```
 
 This extra friction is intentional. Destroying infrastructure should be harder to trigger accidentally than deploying an application.
+
+I tested the guard by entering lowercase `destroy` instead of `DESTROY`. The confirmation job failed as expected, and the Terraform Destroy job was skipped. No infrastructure was destroyed.
+
+![Destroy confirmation test: lowercase input rejected and teardown skipped](assets/terraform-destroy-test.png)
 
 ### Rollback workflow
 
@@ -454,7 +460,7 @@ So far, the rollback checks have been tested with read-only AWS calls and invali
 
 ### Deploy the application
 
-Push to `main` after the normal review/check process. GitHub Actions builds, scans and publishes the SHA-tagged image, then deploys the ECS task definition and waits for service stability.
+Push an application, image-build or Build workflow change to `main` after the normal review/check process. GitHub Actions builds, scans and publishes the SHA-tagged image, then deploys the ECS task definition and waits for service stability. Documentation-only pushes do not deploy.
 
 ### Change infrastructure
 
@@ -495,7 +501,7 @@ It downloads the service's currently assigned task definition, changes only the 
 
 The run summary reports the selected image and digest, new task-definition ARN and previous image. Check the service's actual deployed revision and test the affected endpoints afterwards, including `/health`; service stability alone does not prove functional recovery.
 
-Revert or fix the bad commit before the next push to `main`, because the normal Build workflow deploys that new commit again.
+Revert or fix the bad commit before the next deployment-triggering push to `main`, because the normal Build workflow deploys the image built from that new commit.
 
 ### Destroy the dev environment
 
