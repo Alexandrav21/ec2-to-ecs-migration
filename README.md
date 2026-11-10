@@ -201,6 +201,8 @@ The `production` environment is used by Terraform apply and application rollback
 
 ![GitHub production and destroy environments](assets/environments.png)
 
+The `main` branch is protected by a repository ruleset. Changes must go through a pull request, force pushes and branch deletion are blocked, and administrators are not exempt. The required checks are `Terraform Validate` and `Terraform Plan`. Because the Terraform workflow only runs for infrastructure-related paths, a documentation-only pull request will show those checks as pending and cannot be merged until they are removed or made to report on every change.
+
 ### Application pipeline
 
 The Build workflow handles application delivery.
