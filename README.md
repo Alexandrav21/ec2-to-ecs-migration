@@ -275,6 +275,10 @@ I tested the guard by entering lowercase `destroy` instead of `DESTROY`. The con
 
 ![Destroy confirmation test: lowercase input rejected and teardown skipped](assets/terraform-destroy-test.png)
 
+I then ran the real teardown with `DESTROY`. The application infrastructure has now been torn down. The bootstrap resources, including the Terraform state bucket and Terraform CI role, were intentionally retained.
+
+![Terraform destroy workflow completed](assets/terraform-destroy-real.png)
+
 ### Rollback workflow
 
 Rollback is also manual and targets an existing immutable image SHA.
